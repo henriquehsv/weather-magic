@@ -4,6 +4,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -14,6 +15,9 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.example.android.sunshine.app.networking.OpenWeatherMapAPI;
+import com.example.android.sunshine.app.parsing.WeatherDataParser;
+
+import org.json.JSONException;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -71,11 +75,19 @@ public class ForecastFragment extends Fragment {
         return rootView;
     }
 
-    private class FetchWeatherTask extends AsyncTask<String, Void, String> {
+    private class FetchWeatherTask extends AsyncTask<String, Void, String[]> {
 
         @Override
-        protected String doInBackground(String... strings) {
-            return OpenWeatherMapAPI.getInstance().getWeatherData(strings[0]);
+        protected String[] doInBackground(String... strings) {
+            String weatherData = OpenWeatherMapAPI.getInstance().getWeatherData(strings[0]);
+            String[] weatherInfo = null;
+            try {
+                weatherInfo = new WeatherDataParser().getWeatherDataFromJson(weatherData, 7);
+            } catch (JSONException e) {
+                Log.e(ForecastFragment.class.getName(), "Error ", e);
+            }
+
+            return weatherInfo;
         }
     }
 }
