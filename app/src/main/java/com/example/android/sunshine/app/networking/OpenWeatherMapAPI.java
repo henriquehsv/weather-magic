@@ -10,6 +10,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class OpenWeatherMapAPI {
+    public static final String TAG = OpenWeatherMapAPI.class.getName();
     private static OpenWeatherMapAPI instance;
 
     private OpenWeatherMapAPI() {}
@@ -21,7 +22,6 @@ public class OpenWeatherMapAPI {
 
         return instance;
     }
-
 
     public String getWeatherData(String query) {
         // These two need to be declared outside the try/catch
@@ -37,8 +37,7 @@ public class OpenWeatherMapAPI {
             // Possible parameters are avaiable at OWM's forecast API page, at
             // http://openweathermap.org/API#forecast
             String baseForecastUrl = "http://api.openweathermap.org/data/2.5/forecast/daily?q=%s&mode=json&units=metric&cnt=7&APPID=d9c1720154d4e06408370b70d00026b2";
-            URL url = new URL(String.format(
-                    baseForecastUrl, query));
+            URL url = new URL(String.format(baseForecastUrl, query));
 
             // Create the request to OpenWeatherMap, and open the connection
             urlConnection = (HttpURLConnection) url.openConnection();
@@ -66,13 +65,16 @@ public class OpenWeatherMapAPI {
                 // Stream was empty.  No point in parsing.
                 return null;
             }
+
             forecastJsonStr = buffer.toString();
+
+            Log.v(TAG, forecastJsonStr);
         } catch (IOException e) {
-            Log.e("PlaceholderFragment", "Error ", e);
+            Log.e(TAG, "Error ", e);
             // If the code didn't successfully get the weather data, there's no point in attemping
             // to parse it.
             return null;
-        } finally{
+        } finally {
             if (urlConnection != null) {
                 urlConnection.disconnect();
             }
@@ -80,7 +82,7 @@ public class OpenWeatherMapAPI {
                 try {
                     reader.close();
                 } catch (final IOException e) {
-                    Log.e("PlaceholderFragment", "Error closing stream", e);
+                    Log.e(TAG, "Error closing stream", e);
                 }
             }
         }
