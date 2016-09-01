@@ -67,6 +67,7 @@ public class ForecastFragment extends Fragment {
         ListView forecastList = (ListView) rootView.findViewById(R.id.listview_forecast);
         forecastList.setAdapter(adapter);
 
+
         return rootView;
     }
 

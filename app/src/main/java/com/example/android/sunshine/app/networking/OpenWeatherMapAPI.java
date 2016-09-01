@@ -1,6 +1,9 @@
 package com.example.android.sunshine.app.networking;
 
+import android.net.Uri;
 import android.util.Log;
+
+import com.example.android.sunshine.app.BuildConfig;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -36,8 +39,15 @@ public class OpenWeatherMapAPI {
             // Construct the URL for the OpenWeatherMap query
             // Possible parameters are avaiable at OWM's forecast API page, at
             // http://openweathermap.org/API#forecast
-            String baseForecastUrl = "http://api.openweathermap.org/data/2.5/forecast/daily?q=%s&mode=json&units=metric&cnt=7&APPID=d9c1720154d4e06408370b70d00026b2";
-            URL url = new URL(String.format(baseForecastUrl, query));
+
+            Uri.Builder uriBuilder = Uri.parse("http://api.openweathermap.org/data/2.5/forecast/daily").buildUpon();
+            uriBuilder.appendQueryParameter("q", query);
+            uriBuilder.appendQueryParameter("mode", "json");
+            uriBuilder.appendQueryParameter("units", "metric");
+            uriBuilder.appendQueryParameter("cnt", "7");
+            uriBuilder.appendQueryParameter("APPID", BuildConfig.OPEN_WEATHER_MAP_API_KEY);
+
+            URL url = new URL(uriBuilder.build().toString());
 
             // Create the request to OpenWeatherMap, and open the connection
             urlConnection = (HttpURLConnection) url.openConnection();
