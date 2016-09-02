@@ -2,7 +2,6 @@ package com.example.android.sunshine.app;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -28,6 +27,8 @@ import java.util.List;
  */
 public class ForecastFragment extends Fragment {
 
+    private ArrayAdapter<String> forecastAdapter;
+
     public ForecastFragment() {
     }
 
@@ -36,13 +37,16 @@ public class ForecastFragment extends Fragment {
         int id = item.getItemId();
 
         if (id == R.id.action_refresh) {
-            FetchWeatherTask fetchWeatherTask = new FetchWeatherTask();
-            fetchWeatherTask.execute("Fortaleza,CE,Brazil");
+            fetchWeatherData();
 
             return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void fetchWeatherData() {FetchWeatherTask fetchWeatherTask = new FetchWeatherTask();
+        fetchWeatherTask.execute("Fortaleza,CE,Brazil");
     }
 
     @Override
@@ -61,16 +65,14 @@ public class ForecastFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
-        String[] data = {"Mon 6/23 - Sunny - 31/17", "Tue 6/24 - Foggy - 21/8", "Wed 6/25 - Cloudy - 22/17", "Thurs 6/26 - Rainy - 18/11",
-                "Fri 6/27 - Foggy - 21/10", "Sat 6/28 - TRAPPED IN WEATHERSTATION - 23/18", "Sun 6/29 - Sunny - 20/7"};
+        List<String> weekForecast = new ArrayList<>();
 
-        List<String> weekForecast = new ArrayList<>(Arrays.asList(data));
-
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), R.layout.list_item_forecast, R.id.list_item_forecast_textview, weekForecast);
+        forecastAdapter = new ArrayAdapter<>(getContext(), R.layout.list_item_forecast, R.id.list_item_forecast_textview, weekForecast);
 
         ListView forecastList = (ListView) rootView.findViewById(R.id.listview_forecast);
-        forecastList.setAdapter(adapter);
+        forecastList.setAdapter(forecastAdapter);
 
+        fetchWeatherData();
 
         return rootView;
     }
@@ -88,6 +90,13 @@ public class ForecastFragment extends Fragment {
             }
 
             return weatherInfo;
+        }
+
+        @Override
+        protected void onPostExecute(String[] strings) {
+            forecastAdapter.clear();
+            forecastAdapter.addAll(strings);
+            forecastAdapter.notifyDataSetChanged();
         }
     }
 }
