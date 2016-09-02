@@ -1,5 +1,6 @@
 package com.example.android.sunshine.app;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -10,8 +11,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.example.android.sunshine.app.networking.OpenWeatherMapAPI;
 import com.example.android.sunshine.app.parsing.WeatherDataParser;
@@ -45,7 +48,8 @@ public class ForecastFragment extends Fragment {
         return super.onOptionsItemSelected(item);
     }
 
-    private void fetchWeatherData() {FetchWeatherTask fetchWeatherTask = new FetchWeatherTask();
+    private void fetchWeatherData() {
+        FetchWeatherTask fetchWeatherTask = new FetchWeatherTask();
         fetchWeatherTask.execute("Fortaleza,CE,Brazil");
     }
 
@@ -74,6 +78,16 @@ public class ForecastFragment extends Fragment {
 
         fetchWeatherData();
 
+        forecastList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Intent intent = new Intent();
+                intent.setClass(getContext(), DetailActivity.class);
+
+                getContext().startActivity(intent);
+            }
+        });
+
         return rootView;
     }
 
@@ -96,7 +110,6 @@ public class ForecastFragment extends Fragment {
         protected void onPostExecute(String[] strings) {
             forecastAdapter.clear();
             forecastAdapter.addAll(strings);
-            forecastAdapter.notifyDataSetChanged();
         }
     }
 }
