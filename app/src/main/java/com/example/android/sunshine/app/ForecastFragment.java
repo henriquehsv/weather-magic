@@ -83,6 +83,7 @@ public class ForecastFragment extends Fragment {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Intent intent = new Intent();
                 intent.setClass(getContext(), DetailActivity.class);
+                intent.putExtra(Intent.EXTRA_TEXT, forecastAdapter.getItem(i));
 
                 getContext().startActivity(intent);
             }

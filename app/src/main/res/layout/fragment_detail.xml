@@ -7,7 +7,13 @@
                 android:paddingRight="@dimen/activity_horizontal_margin"
                 android:paddingTop="@dimen/activity_vertical_margin"
                 tools:context="com.example.android.sunshine.app.DetailActivityFragment"
-                tools:showIn="@layout/activity_detail2">
+                tools:showIn="@layout/activity_detail">
 
+    <TextView
+        android:id="@+id/details_forecast_textview"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
 
 </RelativeLayout>
