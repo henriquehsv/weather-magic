@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -43,16 +44,25 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if (id == R.id.action_maps) {
-            Intent intent = new Intent();
-            intent.setAction(Intent.ACTION_VIEW);
-            SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-            String location = sharedPrefs.getString(getString(R.string.pref_location_key), getString(R.string.default_location));
-            intent.setData(Uri.parse("geo:0,0?q=" + Uri.encode(location)));
-            startActivity(intent);
-
+            handleMapsIntent();
             return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void handleMapsIntent() {Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_VIEW);
+        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+        String location = sharedPrefs.getString(getString(R.string.pref_location_key), getString(R.string.default_location));
+
+        Uri geoLocation = Uri.parse("geo:0,0?").buildUpon().appendQueryParameter("q", location).build();
+        intent.setData(geoLocation);
+
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            startActivity(intent);
+        } else {
+            Log.d(getClass().getName(), "Couldn't call " + location + ", no receiving apps installed!");
+        }
     }
 }
