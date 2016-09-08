@@ -35,9 +35,7 @@ import java.util.prefs.Preferences;
 public class ForecastFragment extends Fragment {
 
     private ArrayAdapter<String> forecastAdapter;
-
-    public ForecastFragment() {
-    }
+    private SharedPreferences sharedPreferences;
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -65,6 +63,7 @@ public class ForecastFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
         setHasOptionsMenu(true);
     }
 
@@ -111,7 +110,7 @@ public class ForecastFragment extends Fragment {
             String weatherData = OpenWeatherMapAPI.getInstance().getWeatherData(strings[0]);
             String[] weatherInfo = null;
             try {
-                SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+
                 String metricUnits = getString(R.string.pref_units_metric);
                 String unit = sharedPreferences.getString(getString(R.string.pref_units_key), metricUnits);
 

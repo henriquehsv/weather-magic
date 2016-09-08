@@ -1,7 +1,10 @@
 package com.example.android.sunshine.app;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -34,6 +37,17 @@ public class MainActivity extends AppCompatActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             Intent intent = new Intent(this, SettingsActivity.class);
+            startActivity(intent);
+
+            return true;
+        }
+
+        if (id == R.id.action_maps) {
+            Intent intent = new Intent();
+            intent.setAction(Intent.ACTION_VIEW);
+            SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+            String location = sharedPrefs.getString(getString(R.string.pref_location_key), getString(R.string.default_location));
+            intent.setData(Uri.parse("geo:0,0?q=" + Uri.encode(location)));
             startActivity(intent);
 
             return true;
