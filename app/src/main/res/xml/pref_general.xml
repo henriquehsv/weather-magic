@@ -8,5 +8,13 @@
         android:singleLine="true"
         android:title="@string/location_pref_title"/>
 
+    <ListPreference
+        android:entries="@array/pref_units_options"
+        android:entryValues="@array/pref_units_values"
+        android:defaultValue="@string/pref_units_metric"
+        android:title="@string/pref_units_label"
+        android:singleLine="true"
+        android:key="@string/pref_units_key"
+        />
 
 </PreferenceScreen>
