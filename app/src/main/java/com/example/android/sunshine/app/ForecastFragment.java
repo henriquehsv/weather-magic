@@ -19,6 +19,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.android.sunshine.app.networking.OpenWeatherMapAPI;
+import com.example.android.sunshine.app.parsing.TemperatureUnit;
 import com.example.android.sunshine.app.parsing.WeatherDataParser;
 
 import org.json.JSONException;
@@ -110,7 +111,12 @@ public class ForecastFragment extends Fragment {
             String weatherData = OpenWeatherMapAPI.getInstance().getWeatherData(strings[0]);
             String[] weatherInfo = null;
             try {
-                weatherInfo = new WeatherDataParser().getWeatherDataFromJson(weatherData, 7);
+                SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+                String metricUnits = getString(R.string.pref_units_metric);
+                String unit = sharedPreferences.getString(getString(R.string.pref_units_key), metricUnits);
+
+                TemperatureUnit temperatureUnit = unit.equals(metricUnits) ? TemperatureUnit.Metric : TemperatureUnit.Imperial;
+                weatherInfo = new WeatherDataParser().getWeatherDataFromJson(weatherData, 7, temperatureUnit);
             } catch (JSONException e) {
                 Log.e(ForecastFragment.class.getName(), "Error ", e);
             }
