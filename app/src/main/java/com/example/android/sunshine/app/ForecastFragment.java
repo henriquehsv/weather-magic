@@ -1,8 +1,10 @@
 package com.example.android.sunshine.app;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -24,6 +26,7 @@ import org.json.JSONException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.prefs.Preferences;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -50,7 +53,11 @@ public class ForecastFragment extends Fragment {
 
     private void fetchWeatherData() {
         FetchWeatherTask fetchWeatherTask = new FetchWeatherTask();
-        fetchWeatherTask.execute("Fortaleza,CE,Brazil");
+        String prefLocationKey = getString(R.string.pref_location_key);
+        String defaultLocation = getString(R.string.default_location);
+        String location = PreferenceManager.getDefaultSharedPreferences(getContext()).getString(prefLocationKey, defaultLocation);
+
+        fetchWeatherTask.execute(location);
     }
 
     @Override
@@ -76,8 +83,6 @@ public class ForecastFragment extends Fragment {
         ListView forecastList = (ListView) rootView.findViewById(R.id.listview_forecast);
         forecastList.setAdapter(forecastAdapter);
 
-        fetchWeatherData();
-
         forecastList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -90,6 +95,12 @@ public class ForecastFragment extends Fragment {
         });
 
         return rootView;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        fetchWeatherData();
     }
 
     private class FetchWeatherTask extends AsyncTask<String, Void, String[]> {
