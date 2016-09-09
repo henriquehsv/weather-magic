@@ -26,7 +26,7 @@ public class DetailActivity extends AppCompatActivity {
         FragmentManager supportFragmentManager = getSupportFragmentManager();
         DetailActivityFragment detailActivityFragment = new DetailActivityFragment();
         detailActivityFragment.setArguments(getIntent().getExtras());
-        supportFragmentManager.beginTransaction().add(R.id.fragment_area, detailActivityFragment).commit();
+        supportFragmentManager.beginTransaction().replace(R.id.fragment_area, detailActivityFragment).commit();
     }
 
     @Override
